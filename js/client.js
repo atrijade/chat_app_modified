@@ -3,7 +3,28 @@ const BACKEND_URL = window.location.hostname === 'localhost' || window.location.
     ? 'http://localhost:8080'
     : 'https://chat-app-modified.onrender.com';
 
-const socket = io(BACKEND_URL);
+console.log('Connecting to backend:', BACKEND_URL);
+
+const socket = io(BACKEND_URL, {
+    transports: ['websocket', 'polling'],
+    timeout: 20000,
+    forceNew: true
+});
+
+// Connection event handlers
+socket.on('connect', () => {
+    console.log('✅ Connected to server:', socket.id);
+});
+
+socket.on('connect_error', (error) => {
+    console.error('❌ Connection error:', error);
+    console.error('Backend URL:', BACKEND_URL);
+    console.error('Current origin:', window.location.origin);
+});
+
+socket.on('disconnect', (reason) => {
+    console.log('🔌 Disconnected:', reason);
+});
 
 // DOM Elements
 const form = document.getElementById('send-container');
