@@ -94,7 +94,7 @@ function showEmojiCategory(category) {
     const emojis = emojiData[category] || emojiData.smileys;
     emojiGrid.innerHTML = ''; emojis.forEach(emoji => {
         const emojiButton = document.createElement('button');
-        emojiButton.className = 'p-2 text-2xl hover:bg-gray-100 rounded-lg transition-all duration-200 hover:scale-110 flex items-center justify-center aspect-square';
+        emojiButton.className = 'emoji-button';
         emojiButton.textContent = emoji;
         emojiButton.addEventListener('click', () => {
             insertEmoji(emoji);
@@ -224,18 +224,18 @@ function updateFilePreview() {
 
 function createFilePreviewItem(file, index) {
     const fileItem = document.createElement('div');
-    fileItem.className = 'flex items-center gap-3 bg-white border border-gray-200 rounded-xl p-3 text-sm min-w-0 max-w-52';
+    fileItem.className = 'file-item';
 
     const icon = getFileIcon(file.type);
     const size = formatFileSize(file.size);
 
     fileItem.innerHTML = `
-        <i class="fas ${icon} text-lg text-primary-500 flex-shrink-0"></i>
-        <div class="min-w-0 flex-1">
-            <div class="font-medium text-gray-900 truncate" title="${file.name}">${file.name}</div>
-            <div class="text-xs text-gray-500">${size}</div>
+        <i class="fas ${icon} file-icon"></i>
+        <div class="file-info">
+            <div class="file-name" title="${file.name}">${file.name}</div>
+            <div class="file-size">${size}</div>
         </div>
-        <button type="button" class="text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg p-1 transition-all duration-200 flex-shrink-0" onclick="removeFile(${index})">
+        <button type="button" class="file-remove-btn" onclick="removeFile(${index})">
             <i class="fas fa-times"></i>
         </button>
     `;
@@ -305,27 +305,27 @@ async function sendSingleFile(file) {
 function appendFileMessage(fileData, position, userName = null) {
     const messageElement = document.createElement('div');
 
-    const timeLabel = `<div class="text-xs text-gray-400 mt-1 ${position === 'right' ? 'text-right' : ''}">${formatTime()}</div>`;
+    const timeLabel = `<div class="message-time ${position === 'right' ? 'right' : ''}">${formatTime()}</div>`;
 
     if (position === 'left') {
-        messageElement.className = 'flex justify-start mb-4';
+        messageElement.className = 'message-left';
         if (fileData.type.startsWith('image/')) {
             messageElement.innerHTML = `
-                <div class="max-w-xs lg:max-w-md">
-                    <div class="bg-white border border-gray-200 rounded-2xl rounded-bl-md overflow-hidden shadow-sm">
-                        <div class="px-4 py-2 bg-gray-50 border-b border-gray-200">
-                            <div class="font-semibold text-sm text-gray-800">${userName}</div>
+                <div class="message-container large">
+                    <div class="message-card">
+                        <div class="message-card-header">
+                            <div class="message-sender-name">${userName}</div>
                         </div>
-                        <div class="p-2">
+                        <div class="message-card-content">
                             <img src="${fileData.data}" alt="${fileData.name}" 
-                                 class="w-full rounded-lg cursor-pointer hover:opacity-90 transition-opacity" 
+                                 class="message-image" 
                                  onclick="openImageModal('${fileData.data}', '${fileData.name}')">
-                            <div class="mt-2 p-2 bg-gray-50 rounded-lg">
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-image text-primary-500"></i>
-                                    <div class="min-w-0 flex-1">
-                                        <div class="text-sm font-medium text-gray-900 truncate">${fileData.name}</div>
-                                        <div class="text-xs text-gray-500">${formatFileSize(fileData.size)}</div>
+                            <div class="message-text-content">
+                                <div class="file-item">
+                                    <i class="fas fa-image file-icon"></i>
+                                    <div class="file-info">
+                                        <div class="file-name">${fileData.name}</div>
+                                        <div class="file-size">${formatFileSize(fileData.size)}</div>
                                     </div>
                                 </div>
                             </div>
@@ -336,20 +336,19 @@ function appendFileMessage(fileData, position, userName = null) {
             `;
         } else {
             messageElement.innerHTML = `
-                <div class="max-w-xs lg:max-w-md">
-                    <div class="bg-white border border-gray-200 rounded-2xl rounded-bl-md overflow-hidden shadow-sm">
-                        <div class="px-4 py-2 bg-gray-50 border-b border-gray-200">
-                            <div class="font-semibold text-sm text-gray-800">${userName}</div>
+                <div class="message-container large">
+                    <div class="message-card">
+                        <div class="message-card-header">
+                            <div class="message-sender-name">${userName}</div>
                         </div>
-                        <div class="p-4">
-                            <a href="${fileData.data}" download="${fileData.name}" 
-                               class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group">
-                                <i class="fas ${getFileIcon(fileData.type)} text-lg text-primary-500"></i>
-                                <div class="min-w-0 flex-1">
-                                    <div class="text-sm font-medium text-gray-900 group-hover:text-primary-600 truncate">${fileData.name}</div>
-                                    <div class="text-xs text-gray-500">${formatFileSize(fileData.size)}</div>
+                        <div class="message-card-content">
+                            <a href="${fileData.data}" download="${fileData.name}" class="download-btn file-item">
+                                <i class="fas ${getFileIcon(fileData.type)} file-icon"></i>
+                                <div class="file-info">
+                                    <div class="file-name">${fileData.name}</div>
+                                    <div class="file-size">${formatFileSize(fileData.size)}</div>
                                 </div>
-                                <i class="fas fa-download text-gray-400 group-hover:text-primary-500"></i>
+                                <i class="fas fa-download"></i>
                             </a>
                         </div>
                     </div>
@@ -358,24 +357,24 @@ function appendFileMessage(fileData, position, userName = null) {
             `;
         }
     } else if (position === 'right') {
-        messageElement.className = 'flex justify-end mb-4';
+        messageElement.className = 'message-right';
         if (fileData.type.startsWith('image/')) {
             messageElement.innerHTML = `
-                <div class="max-w-xs lg:max-w-md">
-                    <div class="gradient-bg rounded-2xl rounded-br-md overflow-hidden shadow-sm">
-                        <div class="px-4 py-2 bg-black bg-opacity-10">
-                            <div class="font-semibold text-sm text-white opacity-90">${userName}</div>
+                <div class="message-container large">
+                    <div class="message-card own">
+                        <div class="message-card-header">
+                            <div class="message-sender-name">${userName}</div>
                         </div>
-                        <div class="p-2">
+                        <div class="message-card-content">
                             <img src="${fileData.data}" alt="${fileData.name}" 
-                                 class="w-full rounded-lg cursor-pointer hover:opacity-90 transition-opacity" 
+                                 class="message-image" 
                                  onclick="openImageModal('${fileData.data}', '${fileData.name}')">
-                            <div class="mt-2 p-2 bg-white bg-opacity-20 rounded-lg">
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-image text-white"></i>
-                                    <div class="min-w-0 flex-1">
-                                        <div class="text-sm font-medium text-white truncate">${fileData.name}</div>
-                                        <div class="text-xs text-white opacity-75">${formatFileSize(fileData.size)}</div>
+                            <div class="message-text-content">
+                                <div class="file-item">
+                                    <i class="fas fa-image file-icon"></i>
+                                    <div class="file-info">
+                                        <div class="file-name">${fileData.name}</div>
+                                        <div class="file-size">${formatFileSize(fileData.size)}</div>
                                     </div>
                                 </div>
                             </div>

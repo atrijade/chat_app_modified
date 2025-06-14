@@ -1,17 +1,18 @@
 # 💬 ModernChat - Real-time Chat Application
 
-A modern, feature-rich real-time chat application built with Node.js, Socket.io, and Tailwind CSS.
+A modern, feature-rich real-time chat application built with Node.js, Socket.io, and Custom CSS.
 
 ## ✨ Features
 
 - 🔥 **Real-time messaging** with Socket.io
 - 😊 **Emoji picker** with categories
 - 📎 **File sharing** (images, documents, etc.)
-- 🎨 **Modern UI** with Tailwind CSS
+- 🎨 **Modern UI** with Custom CSS (no framework dependencies)
 - 📱 **Responsive design** for mobile and desktop
 - 🔊 **Audio notifications** (toggle-able)
 - 👥 **User management** with join/leave notifications
 - ⚡ **Fast and lightweight**
+- 🌐 **GitHub Pages ready** for easy deployment
 
 ## 🚀 Quick Start
 
@@ -73,6 +74,52 @@ railway up
 
 ### Option 3: DigitalOcean, AWS, Google Cloud
 See `HOSTING_GUIDE.md` for detailed instructions.
+
+## 🌐 GitHub Pages Deployment
+
+This application is configured to automatically deploy to GitHub Pages when you push to the main branch.
+
+### Steps to Deploy:
+
+1. **Push to GitHub**:
+   ```bash
+   git add .
+   git commit -m "Deploy to GitHub Pages"
+   git push origin main
+   ```
+
+2. **Enable GitHub Pages**:
+   - Go to your repository settings
+   - Scroll to "Pages" section
+   - Select "GitHub Actions" as the source
+   - The deployment will happen automatically
+
+3. **Backend Setup**:
+   - For production, you'll need to deploy the backend separately
+   - Recommended platforms: Render, Heroku, Railway, Vercel
+   - Update the backend URL in `js/client.js` if needed
+
+### Backend Deployment Options:
+
+#### Option 1: Render (Recommended)
+1. Create account on [Render](https://render.com)
+2. Connect your GitHub repository
+3. Deploy the `nodeServer` folder as a Web Service
+4. Use the provided URL as your backend URL
+
+#### Option 2: Railway
+1. Create account on [Railway](https://railway.app)
+2. Deploy from GitHub
+3. Set root directory to `nodeServer`
+4. Use the provided URL as your backend URL
+
+#### Option 3: Update for Your Deployed Backend
+If you deploy the backend elsewhere, update the URL in `js/client.js`:
+```javascript
+const BACKEND_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8080'
+    : 'https://your-backend-url.com'; // Replace with your backend URL
+```
 
 ## 📁 Project Structure
 
