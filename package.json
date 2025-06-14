@@ -1,0 +1,22 @@
+{
+    "name": "modernchat-frontend",
+    "version": "1.0.0",
+    "description": "ModernChat frontend with Tailwind CSS",
+    "main": "index.html",
+    "scripts": {
+        "build": "npx tailwindcss -i ./src/input.css -o ./css/style.css --minify",
+        "build-prod": "tailwindcss -i ./src/input.css -o ./css/style.css --minify",
+        "dev": "tailwindcss -i ./src/input.css -o ./css/style.css --watch"
+    },
+    "devDependencies": {
+        "tailwindcss": "^3.4.0"
+    },
+    "keywords": [
+        "chat",
+        "realtime",
+        "socket.io",
+        "tailwind"
+    ],
+    "author": "Your Name",
+    "license": "MIT"
+}
